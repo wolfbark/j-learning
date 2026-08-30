@@ -102,6 +102,15 @@ that flag is scoped to that one project.
 > `grafana/otel-lgtm` (project 15, step 6) and the Temporal server images (project 10, step 6) — so
 > restart Docker Desktop before those two exercises.
 
+## IDE setup
+
+The repo root has a thin aggregator `pom.xml` (`packaging=pom`, no parent inheritance) whose sole
+job is to list every project as a `<module>`. Open the repo root as a Maven project in your IDE and
+all 22 lessons (24 modules, counting the two-project tracks) are imported in one step — no need to
+add each project as a module by hand. Each project still keeps its own versions, dependencies and
+parent, and is built independently by `verify-all.sh`; the aggregator is IDE/tooling convenience
+only.
+
 ## Checking the repo still builds
 
 ```bash

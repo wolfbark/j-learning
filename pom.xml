@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>vlearning</groupId>
+  <artifactId>j-learning</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+
+  <name>J-Learning — Modern Java Backend Training</name>
+  <description>
+    Aggregator POM only: groups the 22 independent, self-contained training projects so IDEs
+    (and `mvn -N` style tooling) can discover the whole repository as a single Maven reactor.
+    Each module keeps its own versions, dependencies and parent — this POM intentionally does
+    not act as their Maven parent.
+  </description>
+
+  <modules>
+    <module>01-modern-java</module>
+    <module>02-tdd</module>
+    <module>03-vertical-slices</module>
+    <module>04-hexagonal-architecture</module>
+    <module>05-ddd</module>
+    <module>06-modular-monolith</module>
+    <module>07-events-and-outbox</module>
+    <module>08-cqrs</module>
+    <module>09-event-sourcing</module>
+    <module>10-sagas</module>
+    <module>11-microservices/order-service</module>
+    <module>11-microservices/shipping-service</module>
+    <module>12-testing-strategy/order-service</module>
+    <module>12-testing-strategy/payment-service</module>
+    <module>13-bdd</module>
+    <module>14-virtual-threads</module>
+    <module>15-production-readiness</module>
+    <module>16-ai-backend</module>
+    <module>17-api-security</module>
+    <module>18-messaging-mechanics</module>
+    <module>19-reliability-slo</module>
+    <module>20-transactions</module>
+    <module>21-locking</module>
+    <module>22-distributed-locking</module>
+  </modules>
+</project>
