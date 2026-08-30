@@ -1,0 +1,23 @@
+# Only needed to run the app by hand (`mvn spring-boot:run`) and poke at it with curl.
+# The tests do not use this file — they start their own Postgres and Keycloak with Testcontainers.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: expenses
+      POSTGRES_USER: expenses
+      POSTGRES_PASSWORD: expenses
+    ports:
+      - "5432:5432"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      # Keycloak's directory import insists on <realm-name>-realm.json filenames.
+      - ./src/test/resources/keycloak:/opt/keycloak/data/import:ro
+    ports:
+      - "8081:8080"

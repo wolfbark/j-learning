@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-service
+
+  # The payment-service HTTP client. Note the deadline: project 11's lesson,
+  # enforced here from the start.
+  http:
+    serviceclient:
+      payments:
+        base-url: ${PAYMENTS_BASE_URL:http://localhost:8081}
+        connect-timeout: 500ms
+        read-timeout: 2s
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level [order-service] %logger{24} : %msg%n"

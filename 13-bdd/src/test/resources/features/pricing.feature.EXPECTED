@@ -1,0 +1,115 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# REFERENCE SOLUTION — do not open this before step 5.
+#
+# The .EXPECTED extension keeps Cucumber from picking this file up (the engine only
+# discovers *.feature). It is here so that after you have written and passed YOUR
+# pricing.feature you can diff the two:
+#
+#   diff -u src/test/resources/features/pricing.feature \
+#           src/test/resources/features/pricing.feature.EXPECTED
+#
+# Differences are not failures. What matters is: did you cover every ruling, is each
+# scenario about business behaviour rather than about your API, and did you find any
+# example that this file misses?
+# ─────────────────────────────────────────────────────────────────────────────
+
+Feature: Checkout pricing
+
+  Tiered discounts, promo codes and loyalty points, as agreed in the example-mapping
+  session. Every scenario below is a decision that session made — the rulings live in
+  docs/example-mapping.md, and each Rule block names the rule card it came from.
+
+  Rule: The tier discount applies only to orders strictly over €100
+
+    Example: An order of exactly €100 misses the discount
+      Given a member with 0 points
+      When they check out an order of €100.00
+      Then the discount is €0.00
+      And the amount due is €100.00
+
+    Example: One cent over the threshold earns the discount
+      Given a member with 0 points
+      When they check out an order of €100.01
+      Then the discount is €10.00
+      And the amount due is €90.01
+
+    Example: A guest gets no tier discount at any size
+      Given a guest with 0 points
+      When they check out an order of €250.00
+      Then the discount is €0.00
+      And the amount due is €250.00
+
+  Rule: Percentage discounts round half up to the nearest cent
+
+    Example: 10% of €107.55 is €10.755, charged as €10.76
+      Given a member with 0 points
+      When they check out an order of €107.55
+      Then the discount is €10.76
+      And the amount due is €96.79
+
+    Example: 20% of €149.99 is €29.998, charged as €30.00
+      Given a gold member with 0 points
+      When they check out an order of €149.99
+      Then the discount is €30.00
+      And the amount due is €119.99
+
+  Rule: Percentage discounts never stack — the customer gets the better one
+
+    Scenario Outline: Tier discount versus promo code
+      Given a <tier> with 0 points
+      When they check out an order of €<subtotal> with promo code "<code>"
+      Then the discount is €<discount>
+
+      Examples:
+        | tier        | subtotal | code      | discount |
+        | gold member | 200.00   | WELCOME15 | 40.00    |
+        | member      | 200.00   | WELCOME15 | 30.00    |
+        | member      | 80.00    | WELCOME15 | 12.00    |
+        | guest       | 80.00    | SPRING5   | 4.00     |
+
+  Rule: Points pay for what is left after the discount, in whole 100-point blocks
+
+    Example: A gold member spends 500 points on a discounted order
+      Given a gold member with 500 points
+      When they check out an order of €200.00 paying with 500 points
+      Then the discount is €40.00
+      And the points credit is €50.00
+      And the amount due is €110.00
+      And they earn 11 points
+      And their point balance is 11
+
+    Example: Redemption stops at the amount due and the rest stays in the balance
+      Given a member with 2000 points
+      When they check out an order of €120.00 paying with 2000 points
+      Then the points credit is €100.00
+      And the amount due is €8.00
+      And they earn 0 points
+      And their point balance is 1000
+
+    Example: Points come in blocks of 100 or not at all
+      Given a member with 500 points
+      When they try to check out an order of €120.00 paying with 150 points
+      Then checkout is rejected with "points must be redeemed in blocks of 100"
+
+    Example: A guest has no points to spend
+      Given a guest with 0 points
+      When they try to check out an order of €120.00 paying with 100 points
+      Then checkout is rejected with "only members can redeem points"
+
+    Example: A member cannot spend points they do not have
+      Given a member with 300 points
+      When they try to check out an order of €120.00 paying with 400 points
+      Then checkout is rejected with "not enough points"
+
+  Rule: Points are earned on the cash actually paid, one per whole €10
+
+    Example: Earning follows the discounted price, not the ticket price
+      Given a gold member with 0 points
+      When they check out an order of €200.00
+      Then the amount due is €160.00
+      And they earn 16 points
+
+    Example: A guest earns nothing
+      Given a guest with 0 points
+      When they check out an order of €200.00
+      Then they earn 0 points

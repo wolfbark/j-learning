@@ -1,4 +1,4 @@
-# V-Learning — Modern Java Backend Training
+# J-Learning — Modern Java Backend Training
 
 A personal training portfolio of **22 self-contained mini-projects**, each teaching one modern
 Java backend architecture style, methodology, or platform capability. The topic list and all
@@ -167,4 +167,3 @@ exist in real work: threat modelling (`17-api-security/docs/threat-model.md`), e
 - [ ] 20 Transactions
 - [ ] 21 Locking
 - [ ] 22 Distributed locking
-# j-learning

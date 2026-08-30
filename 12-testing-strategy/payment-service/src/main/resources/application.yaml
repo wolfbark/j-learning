@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: payment-service
+
+  datasource:
+    url: ${PAYMENTS_DB_URL:jdbc:postgresql://localhost:5434/payments}
+    username: ${PAYMENTS_DB_USER:payments}
+    password: ${PAYMENTS_DB_PASSWORD:payments}
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level [payment-service] %logger{24} : %msg%n"

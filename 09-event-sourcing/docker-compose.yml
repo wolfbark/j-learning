@@ -1,0 +1,27 @@
+# Postgres for running the app by hand (`docker compose up -d postgres`).
+# Tests do NOT use this file — they manage their own container via Testcontainers.
+#
+# The `kurrentdb` service is for the stretch goal only:
+#   docker compose --profile stretch up -d
+# KurrentDB (ex-EventStoreDB) then serves gRPC on :2113 and its admin UI on http://localhost:2113.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ledger
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ledger
+    ports:
+      - "5432:5432"
+
+  kurrentdb:
+    image: kurrentplatform/kurrentdb:25.0
+    profiles: ["stretch"]
+    environment:
+      KURRENTDB_CLUSTER_SIZE: 1
+      KURRENTDB_RUN_PROJECTIONS: All
+      KURRENTDB_START_STANDARD_PROJECTIONS: "true"
+      KURRENTDB_INSECURE: "true"
+      KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP: "true"
+    ports:
+      - "2113:2113"

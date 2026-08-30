@@ -1,0 +1,30 @@
+# Observability stack for step 6. One container carries Grafana, Prometheus,
+# Tempo, Loki and an OpenTelemetry Collector already wired together — the
+# quickest honest way to see your own traces.
+#
+#   docker compose up -d
+#   # Grafana: http://localhost:3000  (anonymous admin, no login)
+#
+# NOTE: this image is not cached on this machine yet, and Docker Desktop's
+# registry pulls were hanging when this project was written. If `docker compose
+# pull` stalls, restart Docker Desktop first. Nothing in `mvn test` needs this
+# stack — it is for the part of the lesson you look at rather than assert on.
+services:
+  lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: vlearning-lgtm
+    ports:
+      - "3000:3000"   # Grafana UI
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP — matches management.otlp.tracing.endpoint
+    environment:
+      - ENABLE_LOGS_ALL=true
+
+  # A stand-in payment gateway for running the app by hand: slow, flaky, and
+  # entirely under your control via WireMock's admin API on /__admin.
+  gateway:
+    image: wiremock/wiremock:3.13.1
+    container_name: vlearning-gateway
+    ports:
+      - "9099:8080"
+    command: ["--verbose", "--global-response-templating"]

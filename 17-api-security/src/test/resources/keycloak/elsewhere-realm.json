@@ -1,0 +1,54 @@
+{
+  "realm": "elsewhere",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "accessTokenLifespan": 300,
+  "clients": [
+    {
+      "clientId": "other-tests",
+      "name": "A client in a realm this API does not trust",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "other-tests-secret",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "expense-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "expense-api",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "mallory",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "mallory@elsewhere.example",
+      "firstName": "Mallory",
+      "lastName": "Kerr",
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "mallory-pw",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}
